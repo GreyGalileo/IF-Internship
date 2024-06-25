@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/IFinternship/META"
+  "_build/install/default/lib/IFinternship/dune-package"
+  "_build/install/default/lib/IFinternship/opam"
+]
+bin: [
+  "_build/install/default/bin/IFinternship"
+]
