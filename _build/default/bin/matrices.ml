@@ -82,5 +82,6 @@ let rank mat =
       else 1 + (count_nonzero_lines res)
   in 
   let g = mat |> gauss_pivot in
+  Printf.printf "\nPivoted :\n";
   print_matrix g;
   g |> count_nonzero_lines;;

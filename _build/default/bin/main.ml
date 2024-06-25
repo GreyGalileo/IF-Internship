@@ -21,7 +21,7 @@ let find_irreducible_polynomial deg =
 
 
 
-let ideal_polynomial = find_irreducible_polynomial 5;;
+let ideal_polynomial = find_irreducible_polynomial 20;;
 match ideal_polynomial with
 |None -> Printf.printf "There is no 3-term irreducible polynomial for this degree\n"
 |Some p -> Polynomials.print_polynomial p;;

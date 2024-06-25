@@ -15,7 +15,7 @@ let rec remainder_euclidean_division_polynomials: polynomial -> polynomial -> po
   = fun p q ->  (*remainder of the euclidean division of p by q*)
   let p_red = eliminate_leading_0s p and q_red = eliminate_leading_0s q in
   let p_len = List.length p_red and q_len = List.length q_red in
-  if p_len < q_len || p_len = 0 then p_red
+  if p_len < q_len || q_len = 0 then p_red
   else 
     let q_shifted = q_red @ List.init (p_len - q_len) (fun _ -> 0) in
     let p_minus_qshift = List.map2 (lxor) p_red q_shifted in
@@ -97,11 +97,11 @@ let check_irreducibility (p:polynomial) =
   let g = gcd p d in
   print_polynomial g;
   match g with
-  |[] |_::[] ->
-    false
-  |_ ->
+  |1::[] ->
     let num_irr_factors = berlekamp p in
     if num_irr_factors = 1 then
       true
     else
-      false;;
+      false
+  |[]|0::[] -> raise Matrices.DisallowedValue
+  |_ -> false
