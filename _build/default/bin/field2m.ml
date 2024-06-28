@@ -18,8 +18,8 @@ type field2m = int list;; (*should alays be of size m*)
 
 exception DisallowedValue (*when a memeber of field2m contains an entry not in {0,1}*);;
 
-let ideal_polynomial = (*Polynomial which generates the ideal over which the quotient field is defined*)
-  let arr = Array.make (m+1) 0 in
+let ideal_polynomial (*Polynomial which generates the ideal over which the quotient field is defined*)
+  = let arr = Array.make (m+1) 0 in
   arr.(0) <- 1;
   arr.(1) <- 1;
   arr.(m) <- 1;

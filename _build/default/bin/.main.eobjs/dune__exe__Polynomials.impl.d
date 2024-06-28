@@ -1,1 +1,1 @@
-bin/polynomials.ml: List Matrices Printf
+bin/polynomials.ml: Array List Matrices Printf

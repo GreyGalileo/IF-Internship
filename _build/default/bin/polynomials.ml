@@ -6,14 +6,14 @@ type polynomial = int list
 
 exception WrongDimension of int
 
-let rec eliminate_leading_0s (p:int list) = 
+let rec remove_leading_0s (p:int list) = 
   match p with
-  | 0 :: res -> eliminate_leading_0s res
+  | 0 :: res -> remove_leading_0s res
   | _ -> p;;
 
 let rec remainder_euclidean_division_polynomials: polynomial -> polynomial -> polynomial
   = fun p q ->  (*remainder of the euclidean division of p by q*)
-  let p_red = eliminate_leading_0s p and q_red = eliminate_leading_0s q in
+  let p_red = remove_leading_0s p and q_red = remove_leading_0s q in
   let p_len = List.length p_red and q_len = List.length q_red in
   if p_len < q_len || q_len = 0 then p_red
   else 
@@ -85,17 +85,17 @@ let berlekamp (p:polynomial)
     | _ -> raise (WrongDimension (List.length res))
   in
   let sp_matrix = List.init deg sp_X_degree in
-  Matrices.print_matrix sp_matrix;
+  (*Matrices.print_matrix sp_matrix;*)
   let rank = Matrices.rank sp_matrix in
-  Printf.printf "Rank: %d\n" rank;
+  (*Printf.printf "Rank: %d\n" rank;*)
   deg - rank;;
 
 
 let check_irreducibility (p:polynomial) =
   let d = derivative p in
-  print_polynomial d;
-  let g = gcd p d in
-  print_polynomial g;
+  (*print_polynomial d;*)
+  let g = (gcd p d) |> remove_leading_0s in
+  (*print_polynomial g;*)
   match g with
   |1::[] ->
     let num_irr_factors = berlekamp p in
@@ -105,3 +105,49 @@ let check_irreducibility (p:polynomial) =
       false
   |[]|0::[] -> raise Matrices.DisallowedValue
   |_ -> false
+
+let irreducible_polynomial_degree deg =
+  let arr = Array.make (deg+1) 0 in
+  arr.(0) <- 1;
+  arr.(deg) <- 1;
+  let rec three_term_test_loop n =
+    if n >= deg then
+      None
+    else
+      begin
+      arr.(n) <- 1;
+      let p = (Array.to_list arr) in
+      (*Printf.printf "\nPolynomial:\n";
+      print_polynomial p;*)
+      if check_irreducibility p then
+        Some p
+      else
+        (arr.(n) <- 0; three_term_test_loop (n+1))
+      end
+  in
+  let rec four_term_test_loop n k =
+    if n >= deg then
+      None
+    else
+      begin     
+        if k >= n then
+          (arr.(n) <- 0;four_term_test_loop (n+1) 1)
+        else
+          begin
+          arr.(n) <- 1;
+          arr.(k) <- 1;
+          let p = (Array.to_list arr) in
+          (*
+          Printf.printf "\nPolynomial:\n";
+          print_polynomial p;
+          *)
+          if check_irreducibility p then
+            Some p
+          else
+            (arr.(k) <- 0; four_term_test_loop n (k+1))
+          end
+      end
+  in
+  match three_term_test_loop 1 with
+    |Some p -> Some p
+    |None -> four_term_test_loop 1 1

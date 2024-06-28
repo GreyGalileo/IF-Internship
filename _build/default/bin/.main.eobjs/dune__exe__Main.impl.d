@@ -1,1 +1,1 @@
-bin/main.ml: Array Polynomials Printf
+bin/main.ml: Polynomials Printf
